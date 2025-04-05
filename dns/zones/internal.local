@@ -1,0 +1,15 @@
+$TTL    86400
+@       IN      SOA     internal.local. admin.internal.local. (
+                        2023121501      ; Serial
+                        3600            ; Refresh
+                        1800            ; Retry
+                        604800          ; Expire
+                        86400 )         ; Negative Cache TTL
+;
+@       IN      NS      ns1.internal.local.
+@       IN      A       10.0.1.10
+ns1     IN      A       10.0.1.11
+web     IN      A       10.0.1.10
+auth    IN      A       10.0.1.12
+db      IN      A       10.0.1.13
+admin   IN      A       10.0.1.14
