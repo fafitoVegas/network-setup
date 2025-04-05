@@ -1,0 +1,85 @@
+# docker-compose.yml
+version: '3.8'
+
+networks:
+  internal_vlan:
+    driver: macvlan
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+  external_vlan:
+    driver: macvlan
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+
+services:
+  firewall:
+    build: 
+      context: ./firewall
+    networks:
+      internal_vlan:
+        ipv4_address: 10.0.1.1
+      external_vlan:
+        ipv4_address: 10.0.2.1
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  webserver:
+    build: 
+      context: ./webserver
+    networks:
+      internal_vlan:
+        ipv4_address: 10.0.1.10
+
+  dns:
+    build: 
+      context: ./dns
+    networks:
+      internal_vlan:
+        ipv4_address: 10.0.1.11
+
+  auth:
+    build: 
+      context: ./auth
+    networks:
+      internal_vlan:
+        ipv4_address: 10.0.1.12
+
+  database:
+    build: 
+      context: ./database
+    networks:
+      internal_vlan:
+        ipv4_address: 10.0.1.13
+
+  admin:
+    build: 
+      context: ./admin
+    networks:
+      internal_vlan:
+        ipv4_address: 10.0.1.14
+
+  client:
+    build: 
+      context: ./client
+    networks:
+      external_vlan:
+        ipv4_address: 10.0.2.10
+
+  switch_internal:
+    build: 
+      context: ./switch
+    networks:
+      - internal_vlan
+    cap_add:
+      - NET_ADMIN
+
+  switch_external:
+    build: 
+      context: ./switch
+    networks:
+      - external_vlan
+    cap_add:
+      - NET_ADMIN
